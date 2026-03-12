@@ -1,0 +1,214 @@
+// ============================================================================
+// CodeMaarg — Developer Project Ideation & Collaboration Platform
+// Prisma Schema · PostgreSQL
+// ============================================================================
+//
+// ARCHITECTURAL DECISIONS
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// 1. MATERIALIZED VOTE COUNTS (Co-located Storage Pattern)
+//    ──────────────────────────────────────────────────────
+//    `upvoteCount` and `downvoteCount` live directly on the `Project` model.
+//    On every vote mutation we do TWO writes inside a single transaction:
+//      a) upsert the `Vote` row (source of truth)
+//      b) atomic `increment` / `decrement` on the Project counters
+//    This trades a tiny write-amplification for eliminating the expensive
+//    `SELECT COUNT(*) … GROUP BY vote_type` aggregation on every page load.
+//    The `Vote` table remains the canonical source; a periodic reconciliation
+//    job can re-derive counts if drift is ever suspected.
+//
+// 2. NESTED COMMENTS — MATERIALIZED PATH (Ltree-style)
+//    ──────────────────────────────────────────────────
+//    Each `Comment` stores a `path` column (e.g. "/c1/c5/c12") that encodes
+//    its full ancestry.  This pattern supports:
+//      • Fetch entire subtree →  `WHERE path LIKE '/c1/c5/%'`
+//      • Fetch root threads  →  `WHERE depth = 0`
+//      • Sort chronologically while grouping threads → `ORDER BY path`
+//    The alternative (recursive CTEs / adjacency list) degrades to O(depth)
+//    queries per render; Materialized Path is O(1) for reads.
+//    `depth` is stored de-normalized for quick indentation calculations.
+//
+// 3. ENUM-BASED VOTE TYPE
+//    ─────────────────────
+//    Using a Prisma `enum VoteType` (mapped to a PG enum) rather than a raw
+//    Int (1 / -1) gives schema-level validation and eliminates an entire
+//    class of bugs where an unexpected integer sneaks in.
+//
+// 4. COMPOSITE UNIQUE CONSTRAINTS
+//    ─────────────────────────────
+//    `Vote` has @@unique([userId, projectId]) enforcing one-vote-per-user at
+//    the database level (not application level). This is the strongest
+//    guarantee against double-voting.
+//
+// 5. TEXT SEARCH / VECTOR READINESS
+//    ──────────────────────────────
+//    `User.bio`, `User.skills`, and `Project.description` are rich-text
+//    fields that will also be embedded into the MongoDB Atlas Vector store
+//    for semantic matchmaking.  The PG schema stays relational; the vectors
+//    live in a separate engine (see src/lib/vector/).
+//
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// ENUMS
+// ──────────────────────────────────────────────────────────────────────────────
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// USER
+// ──────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  avatarUrl     String?
+  bio           String?  @db.Text
+  skills        String[] // e.g. ["TypeScript", "Rust", "PostgreSQL"]
+  githubHandle  String?  @unique
+  timezone      String?  // IANA tz id, e.g. "Asia/Kolkata"  — used for matchmaking weights
+  skillLevel    SkillLevel @default(BEGINNER)
+
+  // Relations
+  projects      Project[]
+  votes         Vote[]
+  comments      Comment[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([githubHandle])
+  @@map("users")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// PROJECT
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Project {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique        // URL-friendly identifier for SEO (Astro directory)
+  description   String        @db.Text
+  repoUrl       String?
+  tags          String[]                      // e.g. ["ai", "fintech", "open-source"]
+  status        ProjectStatus @default(DRAFT)
+
+  // ── Materialized vote counters (co-located storage) ──────────────────────
+  // These are atomically incremented/decremented inside the vote transaction.
+  // They are NOT the source of truth; the Vote table is.
+  upvoteCount   Int           @default(0)
+  downvoteCount Int           @default(0)
+
+  // Relations
+  authorId      String
+  author        User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  votes         Vote[]
+  comments      Comment[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([status])
+  @@index([upvoteCount(sort: Desc)])          // Fast "trending" sort
+  @@index([createdAt(sort: Desc)])            // Fast "newest" sort
+  @@map("projects")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// VOTE  (one-vote-per-user enforced at DB level)
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Vote {
+  id         String   @id @default(cuid())
+  voteType   VoteType
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // ── One vote per user per project ────────────────────────────────────────
+  @@unique([userId, projectId])
+  @@index([projectId])
+  @@map("votes")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// COMMENT  (Materialized Path for nested threads)
+// ──────────────────────────────────────────────────────────────────────────────
+//
+// path examples:
+//   Root comment (id = "c1")       → path = "/c1"              depth = 0
+//   Reply to c1  (id = "c5")       → path = "/c1/c5"           depth = 1
+//   Reply to c5  (id = "c12")      → path = "/c1/c5/c12"       depth = 2
+//
+// Query patterns:
+//   All replies under c1          → WHERE path LIKE '/c1/%'
+//   All root-level comments       → WHERE depth = 0
+//   Threaded sort (group + time)  → ORDER BY path ASC, createdAt ASC
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+
+  // ── Materialized Path fields ─────────────────────────────────────────────
+  path       String   // e.g. "/c1/c5/c12"
+  depth      Int      @default(0)
+
+  // Self-relation for direct parent (optional convenience, not required for
+  // queries; the `path` column handles ancestry).
+  parentId   String?
+  parent     Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[] @relation("CommentReplies")
+
+  // Relations
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // ── Indices tuned for the Materialized Path query patterns ───────────────
+  @@index([projectId])
+  @@index([path])                             // subtree queries (LIKE prefix%)
+  @@index([depth])                            // root-level filtering
+  @@index([projectId, path])                  // combined: "all comments for project X, threaded"
+  @@map("comments")
+}
