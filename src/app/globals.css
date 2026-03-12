@@ -1,20 +1,78 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/700.css";
 @import "tailwindcss";
 
 @theme {
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  --color-primary-200: #c7dcf8;
+  --color-primary-300: #95beff;
+  --color-primary-400: #5695fb;
+  --color-primary-500: #2375f2;
+  --color-primary-600: #1459c4;
+  --color-primary-700: #0f4394;
+  --color-primary-800: #13326d;
+  --color-primary-900: #10234f;
+  --color-primary-950: #0b1631;
+  --font-sans: "Manrope Variable", "Manrope", "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Avenir Next", sans-serif;
+}
+
+:root {
+  --sky-base: #d6e3f3;
+  --sky-bright: #e8f1ff;
+  --ink: #101e3c;
+  --ink-soft: #4c5f7e;
+  --brand: #1870f3;
+  --brand-deep: #1053c4;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  @apply bg-slate-50 text-slate-900 antialiased;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at 18% 3%, rgba(255, 255, 255, 0.72), transparent 38%),
+    radial-gradient(circle at 82% 14%, rgba(126, 173, 242, 0.36), transparent 31%),
+    linear-gradient(180deg, var(--sky-bright) 0%, var(--sky-base) 55%, #d2deee 100%);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.26) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.26) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.floating {
+  animation: floatUpDown 6s ease-in-out infinite;
+}
+
+.floating-slow {
+  animation: floatUpDown 9s ease-in-out infinite;
+}
+
+@keyframes floatUpDown {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
 }
