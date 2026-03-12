@@ -1,218 +1,204 @@
 import Link from "next/link";
 import {
-  ArrowRight,
-  BrainCircuit,
-  Code2,
-  Rocket,
-  Users,
-  Terminal,
-  Zap,
+  ArrowUpRight,
+  ChevronDown,
+  CirclePlay,
+  Globe,
+  Sparkles,
 } from "lucide-react";
+
+const productLinks = ["Products", "Resources", "Docs"];
+
+function BrandMark() {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="relative grid h-9 w-9 place-items-center rounded-full bg-primary-600 shadow-[0_6px_14px_rgba(24,112,243,0.35)]">
+        <span className="h-4.5 w-4.5 rounded-full border-[5px] border-white border-r-transparent border-b-transparent" />
+      </span>
+      <span className="font-display text-4 font-semibold tracking-tight text-[#181f2f] sm:text-3xl">
+        CODEMAARG
+      </span>
+    </div>
+  );
+}
+
+function IsoTile({ title, labels }: { title: string; labels: string[] }) {
+  return (
+    <div className="relative rounded-[1.6rem] border border-white/70 bg-white/70 p-4 shadow-[0_16px_35px_rgba(35,65,115,0.16)] backdrop-blur-md sm:p-5">
+      <p className="text-[0.67rem] font-semibold uppercase tracking-[0.17em] text-[#4e6490]">
+        {title}
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
+        {labels.map((label) => (
+          <span
+            key={label}
+            className="rounded-xl border border-[#d8e6ff] bg-[#f8fbff] px-2 py-2 text-center text-[0.68rem] font-semibold text-[#38507b] shadow-[0_6px_12px_rgba(16,53,112,0.08)] sm:text-xs"
+          >
+            {label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* ── Navigation ──────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
-              <Terminal className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              CodeMaarg
-            </span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <Link href="#features" className="hover:text-primary-600 transition-colors">
-              Features
-            </Link>
-            <Link href="#how-it-works" className="hover:text-primary-600 transition-colors">
-              How it Works
-            </Link>
-            <Link href="/projects" className="hover:text-primary-600 transition-colors">
-              Discover Projects
-            </Link>
+    <div className="min-h-screen overflow-x-hidden">
+      <div className="h-1.5 bg-[#2f4f5f]" />
+
+      <header className="px-4 pt-5 sm:px-6 lg:px-10">
+        <div className="mx-auto flex h-22 w-full max-w-352.5 items-center rounded-[2.35rem] border border-white/80 bg-white/80 px-5 shadow-[0_8px_30px_rgba(19,46,90,0.13)] backdrop-blur-md sm:px-7 lg:px-12">
+          <BrandMark />
+
+          <nav className="mx-auto hidden items-center gap-12 lg:flex">
+            {productLinks.map((item) => (
+              <Link
+                key={item}
+                href="#"
+                className="text-lg font-semibold tracking-tight text-[#222d44] transition-colors hover:text-primary-600"
+              >
+                {item}
+              </Link>
+            ))}
           </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors hidden md:block"
+
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              type="button"
+              className="hidden items-center gap-2 rounded-full border border-[#dae6fb] bg-[#edf4ff] px-4 py-2.5 text-sm font-semibold text-[#33496f] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:flex"
             >
-              Sign In
-            </Link>
+              <Globe className="h-4 w-4 text-primary-500" />
+              India
+              <ChevronDown className="h-4 w-4 text-[#7c8ca8]" />
+            </button>
+
             <Link
-              href="/signup"
-              className="text-sm font-semibold bg-slate-900 text-white px-4 py-2 rounded-full hover:bg-slate-800 transition-colors"
+              href="#"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold text-primary-600 ring-1 ring-[#d6e4fb] transition hover:bg-[#f5f9ff] sm:text-base"
             >
-              Get Started
+              Contact us
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="grow">
-        {/* ── Hero Section ──────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden pt-24 pb-32 lg:pt-36 lg:pb-40">
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
-          <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-77.5 w-77.5 rounded-full bg-primary-400 opacity-20 blur-[100px]"></div>
+      <main className="relative px-4 pb-20 pt-8 sm:px-6 lg:px-10">
+        <div className="hero-grid pointer-events-none absolute inset-0 opacity-35" />
 
-          <div className="container mx-auto px-4 text-center max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-sm font-medium mb-8">
-              <Zap className="w-4 h-4" />
-              <span>Solving the "Cold Start" Developer Problem</span>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight mb-8">
-              Stop dreaming about <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-indigo-600">
-                your next big project.
-              </span>
-            </h1>
-            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              CodeMaarg gives you AI-generated step-by-step milestones to
-              build any project, helps you validate ideas, and semantically
-              matches you with the exact right developers to scale it.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/roadmap-generator"
-                className="flex items-center gap-2 h-14 px-8 rounded-full bg-primary-600 text-white font-semibold hover:bg-primary-700 shadow-lg shadow-primary-500/30 transition-all hover:scale-105 active:scale-95 w-full sm:w-auto justify-center"
-              >
-                Generate a Roadmap <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/projects"
-                className="flex items-center gap-2 h-14 px-8 rounded-full bg-white text-slate-700 font-semibold border shadow-sm hover:bg-slate-50 transition-all w-full sm:w-auto justify-center"
-              >
-                Explore Ideas
-              </Link>
-            </div>
+        <section className="relative z-10 mx-auto max-w-352.5 text-center">
+          <div className="mx-auto max-w-185 rounded-3xl border border-white/80 bg-white/70 px-7 py-4 text-lg font-semibold text-[#222d44] shadow-[0_10px_35px_rgba(24,40,86,0.12)] backdrop-blur-md">
+            CodeMaarg now powers founder-first developer collaboration at global scale.
+            <a href="#" className="ml-2 font-bold text-primary-600 hover:text-primary-700">
+              Click here
+            </a>
+            <span className="ml-1 text-[#586986]">to read more.</span>
+          </div>
+
+          <h1 className="mx-auto mt-11 max-w-245 text-balance text-5xl font-bold leading-[0.95] text-[#0f1d38] sm:text-6xl md:text-7xl lg:text-8xl">
+            <span className="text-primary-600">Global Developer</span>
+            <br />
+            Project Operating System
+          </h1>
+
+          <p className="mx-auto mt-7 max-w-220 text-pretty text-lg font-semibold text-[#586987] sm:text-2xl">
+            Superior project clarity, higher shipping velocity, and minimal coordination friction.
+          </p>
+
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+            <Link
+              href="#"
+              className="inline-flex h-14 items-center justify-center rounded-xl border border-primary-500 bg-primary-500 px-10 text-lg font-bold text-white shadow-[0_8px_0_0_#0c4eb8,0_15px_26px_rgba(17,82,190,0.35)] transition hover:-translate-y-0.5 hover:bg-primary-600"
+            >
+              Start Now
+            </Link>
+
+            <Link
+              href="#"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-[#93a9c9] bg-[#deebfa] px-6 text-lg font-extrabold uppercase tracking-[0.08em] text-[#163059] shadow-[0_6px_0_0_#1d2e4f,0_14px_22px_rgba(17,43,90,0.2)] transition hover:-translate-y-0.5"
+            >
+              Learn More
+              <CirclePlay className="h-7 w-7 text-primary-500" />
+            </Link>
           </div>
         </section>
 
-        {/* ── Features Grid ─────────────────────────────────────────────────── */}
-        <section id="features" className="py-24 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Everything you need to ship.
-              </h2>
-              <p className="text-slate-600 text-lg">
-                From a vague concept to a fully-fleshed out open-source community.
-                CodeMaarg is custom-built for developer workflows.
+        <section className="relative z-10 mx-auto mt-18 max-w-352.5">
+          <div className="pointer-events-none absolute inset-x-0 top-12 mx-auto h-72 max-w-232.5 rounded-full bg-[#8eb8f9]/30 blur-[90px]" />
+
+          <div className="relative mx-auto h-107.5 w-full max-w-282.5 min-[420px]:h-127.5 sm:h-140">
+            <div className="floating absolute left-1/2 top-0 z-30 w-[68%] -translate-x-1/2 rounded-4xl border border-[#d7e3f7] bg-white/85 px-7 py-6 shadow-[0_22px_45px_rgba(26,63,125,0.21)] backdrop-blur-md sm:px-10 sm:py-8">
+              <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-primary-500 shadow-[0_14px_30px_rgba(25,110,241,0.4)] sm:h-24 sm:w-24">
+                <span className="h-11 w-11 rounded-full border-10 border-[#edf4ff] border-r-transparent border-b-transparent" />
+              </div>
+              <p className="mt-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-[#6380b2] sm:text-sm">
+                Core Intelligence Layer
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {/* Feature 1 */}
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-100/50 transition-all group">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <BrainCircuit className="w-7 h-7 text-indigo-600" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
-                  AI Learning Roadmaps
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  Tell us what you want to build. Our LLM pipeline generates a
-                  personalized roadmap with concrete milestones, tasks, and
-                  architecture suggestions tailored to your skill level.
-                </p>
-              </div>
+            <div className="absolute left-1/2 top-[31.5%] z-20 h-7 w-7 -translate-x-1/2 rounded-md bg-primary-500 shadow-[0_12px_20px_rgba(24,112,243,0.34)]" />
+            <div className="absolute left-[31%] top-[34%] h-px w-[18%] bg-[#8ea9cc]" />
+            <div className="absolute right-[31%] top-[34%] h-px w-[18%] bg-[#8ea9cc]" />
+            <div className="absolute left-1/2 top-[36%] h-[14%] w-px -translate-x-1/2 bg-[#8ea9cc]" />
 
-              {/* Feature 2 */}
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-100/50 transition-all group">
-                <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Rocket className="w-7 h-7 text-amber-600" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
-                  Idea Validation
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  A Product Hunt designed for code. Post your early-stage
-                  architecture or MVP repo, gather upvotes, and receive crucial
-                  technical feedback via our nested thread system before you
-                  scale.
-                </p>
-              </div>
+            <div className="floating-slow absolute left-[3%] top-[39%] z-20 w-[37%] min-w-65 transform-[rotate(-8deg)]">
+              <IsoTile
+                title="Validation Network"
+                labels={["Votes", "Comments", "Feedback", "Proof"]}
+              />
+            </div>
 
-              {/* Feature 3 */}
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-100/50 transition-all group">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Users className="w-7 h-7 text-emerald-600" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
-                  Semantic Matchmaking
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  Stop cold messaging. Our MongoDB Atlas Vector Search engine
-                  embeds your GitHub history and bio to automatically match you
-                  with teammates possessing complementary skills and overlapping
-                  timezones.
-                </p>
+            <div className="floating absolute right-[3%] top-[39%] z-20 w-[37%] min-w-65 transform-[rotate(8deg)]">
+              <IsoTile
+                title="Team Match"
+                labels={["Vector", "Timezone", "Skills", "Culture"]}
+              />
+            </div>
+
+            <div className="floating-slow absolute left-1/2 top-[64%] z-20 w-[36%] min-w-67.5 -translate-x-1/2">
+              <IsoTile
+                title="Delivery Engine"
+                labels={["Milestones", "Backlog", "Roadmap", "Launch"]}
+              />
+            </div>
+
+            <div className="absolute bottom-0 left-1/2 z-10 w-[56%] min-w-72.5 -translate-x-1/2 rounded-[1.8rem] border border-[#d6e2f7] bg-white/80 px-5 py-4 shadow-[0_16px_35px_rgba(25,52,100,0.17)] backdrop-blur-md">
+              <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
+                {["Postgres", "Prisma", "Atlas", "Next.js"].map((item) => (
+                  <span
+                    key={item}
+                    className="grid h-10 place-items-center rounded-lg border border-[#d8e6ff] bg-[#f7fbff] text-[0.65rem] font-extrabold uppercase tracking-[0.09em] text-[#315585] sm:text-[0.72rem]"
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Social Proof / Stats Section ──────────────────────────────────── */}
-        <section className="py-20 bg-slate-900 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-12">
-              Built on a high-performance stack
-            </h2>
-            <div className="flex flex-wrap justify-center items-center gap-12 opacity-70">
-              {/* Stack logos simulated with text for now */}
-              <div className="flex items-center gap-2 font-bold text-xl"><Code2 /> Next.js</div>
-              <div className="flex items-center gap-2 font-bold text-xl"><Code2 /> Prisma</div>
-              <div className="flex items-center gap-2 font-bold text-xl"><Code2 /> PostgreSQL</div>
-              <div className="flex items-center gap-2 font-bold text-xl"><Code2 /> Tailwind CSS</div>
-              <div className="flex items-center gap-2 font-bold text-xl"><Code2 /> Vector Search</div>
+        <section className="relative z-10 mx-auto mt-16 max-w-275 rounded-4xl border border-white/80 bg-white/60 px-6 py-5 shadow-[0_14px_30px_rgba(20,49,96,0.1)] backdrop-blur-md sm:px-10 sm:py-7">
+          <div className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4f6792]">
+                Built for scale
+              </p>
+              <h2 className="font-display mt-1 text-2xl font-bold text-[#102447] sm:text-3xl">
+                AI-first product building from idea to launch
+              </h2>
             </div>
-          </div>
-        </section>
 
-        {/* ── Bottom CTA ────────────────────────────────────────────────────── */}
-        <section className="py-32 relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary-600"></div>
-          {/* Background pattern */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-size-[24px_24px]"></div>
-          
-          <div className="container mx-auto px-4 relative z-10 text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Ready to write your first commit?
-            </h2>
-            <p className="text-primary-100 mb-10 text-xl max-w-2xl mx-auto">
-              Join thousands of developers turning ideas into shipped products.
-              Whether you are riding solo or building a squad, CodeMaarg has
-              you covered.
-            </p>
             <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-white text-primary-600 font-bold text-lg hover:bg-slate-50 shadow-xl transition-transform hover:scale-105"
+              href="#"
+              className="inline-flex items-center gap-2 rounded-full bg-[#16284c] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#1f3564]"
             >
-              Start for free <ArrowRight className="w-5 h-5" />
+              Explore Platform
+              <Sparkles className="h-4 w-4" />
             </Link>
           </div>
         </section>
       </main>
-
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
-      <footer className="bg-white border-t border-slate-200 py-12">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <Terminal className="w-6 h-6 text-primary-600" />
-            <span className="text-lg font-bold text-slate-900">CodeMaarg</span>
-          </div>
-          <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} CodeMaarg Inc. Empowering developers to build together.
-          </p>
-          <div className="flex gap-6 text-sm font-medium text-slate-500">
-            <Link href="#" className="hover:text-slate-900 transition-colors">Twitter</Link>
-            <Link href="#" className="hover:text-slate-900 transition-colors">GitHub</Link>
-            <Link href="#" className="hover:text-slate-900 transition-colors">Discord</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
