@@ -1,29 +1,29 @@
 import Link from "next/link";
 import { ArrowRight, Dot, Search } from "lucide-react";
 
-const navLinks = ["Scroll", "Jobs", "Launchpad"];
+const navLinks = ["Discover", "Roadmaps", "Matchmaking"];
 
 const featureBlocks = [
   {
-    title: "Show your build journey",
+    title: "Generate practical roadmaps",
     description:
-      "Share roadmap snapshots, technical decisions, and launch updates in a format that helps other developers understand what you are building and why it matters.",
+      "Turn rough project ideas into clear milestone plans with tasks, dependencies, and architecture suggestions that match your skill level.",
   },
   {
-    title: "Find focused opportunities",
+    title: "Validate ideas early",
     description:
-      "Discover relevant project roles, collaboration requests, and hiring posts from teams that value execution quality and clear communication.",
+      "Publish concepts, collect votes, and receive constructive threaded feedback so you can refine scope before heavy implementation.",
   },
   {
-    title: "Build trusted credibility",
+    title: "Match with the right teammates",
     description:
-      "Collect practical validation through votes and technical comments. Transform ideas into community backed projects with real momentum.",
+      "Use semantic profile matching to find collaborators with relevant skills, compatible timezones, and shared project intent.",
   },
 ];
 
-const footerMain = ["Scroll", "Startup Jobs", "Launchpad", "Search People", "Blog", "Advertise"];
-const footerTools = ["Roadmap AI", "Validation Feed", "Team Match", "Resume Builder", "Career Hub", "Creator Toolkit"];
-const footerCompany = ["Brand Kit", "Help", "Privacy", "Code of Conduct", "Terms"];
+const footerMain = ["Discover Projects", "Trending Ideas", "Build Logs", "Developer Profiles", "Blog", "Docs"];
+const footerTools = ["Roadmap Generator", "Validation Feed", "Semantic Match", "Project Workspace", "Milestone Board", "Launch Checklist"];
+const footerCompany = ["About", "Help Center", "Privacy", "Community Rules", "Terms"];
 
 const members = [
   "AK",
@@ -115,7 +115,7 @@ function Brand() {
   return (
     <div className="flex items-center gap-2.5">
       <span className="grid h-7 w-7 place-items-center rounded-md bg-accent-500 text-sm font-bold text-white">
-        P
+        C
       </span>
       <span className="font-serif text-3xl font-bold tracking-tight text-[#0f172a]">
         CodeMaarg
@@ -131,7 +131,7 @@ function UsernameBox() {
         <span className="grid h-8 w-8 place-items-center rounded-full bg-accent-500 text-white">
           <Dot className="h-6 w-6" />
         </span>
-        <span className="text-xl font-bold text-[#0f172a]">codemaarg.io/</span>
+        <span className="text-xl font-bold text-[#0f172a]">codemaarg.dev/</span>
         <input
           aria-label="username"
           placeholder="username"
@@ -162,7 +162,7 @@ function AvatarWall() {
         ))}
       </div>
       <p className="mt-6 text-center text-sm font-semibold text-[#94a3b8]">
-        185,000+ developers already building with the community
+        12,000+ developers already validating and shipping with CodeMaarg
       </p>
     </div>
   );
@@ -171,7 +171,7 @@ function AvatarWall() {
 function QrWidget() {
   return (
     <aside className="fixed bottom-4 right-4 z-40 hidden rounded-2xl border border-[#e2e8f0] bg-white p-3 text-center shadow-[0_8px_18px_rgba(15,23,42,0.12)] lg:block">
-      <p className="mb-2 text-sm font-bold text-[#1f2937]">Download app</p>
+      <p className="mb-2 text-sm font-bold text-[#1f2937]">Mobile beta</p>
       <div className="grid w-23.5 grid-cols-7 gap-0.5 rounded-md bg-white p-1 ring-1 ring-[#dbe2ea]">
         {Array.from({ length: 49 }).map((_, idx) => (
           <span
@@ -211,13 +211,13 @@ export default function Home() {
               href="#"
               className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
             >
-              Log in
+              Sign in
             </Link>
             <Link
               href="#"
               className="rounded-xl bg-accent-500 px-3.5 py-2 text-sm font-bold text-white transition hover:bg-accent-600"
             >
-              Create Profile
+              Start Building
             </Link>
           </div>
         </div>
@@ -227,24 +227,24 @@ export default function Home() {
         <section className="mx-auto max-w-195 text-center">
           <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-[#0f172a] px-4 py-2 text-sm font-bold text-white shadow-[0_6px_15px_rgba(15,23,42,0.25)]">
             <span className="text-base">🚀</span>
-            NEW: Introducing Collaborative Project Launches
+            Now live: AI Roadmaps plus Semantic Team Match
             <ArrowRight className="h-4 w-4" />
           </div>
 
           <h1 className="font-serif mt-10 text-5xl font-bold leading-[1.08] text-[#0f172a] sm:text-6xl md:text-7xl">
-            The professional network
+            From raw ideas
             <br />
-            for builders to show and ship
+            to shipped developer products
           </h1>
 
           <p className="mx-auto mt-6 max-w-160 text-xl font-medium leading-9 text-[#475569]">
-            Showcase your work, launch projects, validate ideas, hire collaborators,
-            and connect with the most exceptional developers.
+            Plan with clarity, validate with community signal, and build with the right collaborators.
+            CodeMaarg helps developers move from concept to launch with confidence.
           </p>
 
           <UsernameBox />
           <p className="mt-4 text-sm font-semibold text-[#a3afc1]">
-            Claim your username before it becomes unavailable
+            Reserve your creator URL before your preferred name is taken
           </p>
 
           <AvatarWall />
@@ -268,14 +268,14 @@ export default function Home() {
 
         <section className="mx-auto mt-24 max-w-195 text-center">
           <h2 className="font-serif text-5xl font-bold leading-[1.12] text-[#0f172a] sm:text-6xl">
-            Join a growing community of
+            Build your next project with
             <br />
-            the most impressive people
+            better planning and better people
           </h2>
 
           <UsernameBox />
           <p className="mt-4 text-sm font-semibold text-[#a3afc1]">
-            Claim your username and start publishing your work today
+            Create your profile and start your first roadmap in minutes
           </p>
         </section>
       </main>
@@ -286,8 +286,7 @@ export default function Home() {
             <div>
               <p className="font-serif text-6xl font-bold text-[#d8dde6]">CodeMaarg</p>
               <p className="mt-5 max-w-70 text-sm font-semibold leading-7 text-[#64748b]">
-                A professional platform where developers present ideas, attract collaborators,
-                and build products with confidence.
+                A developer first platform for roadmap generation, idea validation, and semantic team matchmaking.
               </p>
             </div>
 
@@ -335,7 +334,7 @@ export default function Home() {
             <p>© 2026 CodeMaarg Inc.</p>
             <div className="flex items-center gap-2">
               <Search className="h-4 w-4" />
-              Built for developers who ship
+              Built for developers who execute
             </div>
           </div>
         </div>
