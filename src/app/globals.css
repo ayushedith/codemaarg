@@ -1,6 +1,5 @@
-@import "@fontsource-variable/manrope";
-@import "@fontsource/space-grotesk/500.css";
-@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource/instrument-serif/400.css";
 @import "tailwindcss";
 
 @theme {
@@ -15,17 +14,18 @@
   --color-primary-800: #13326d;
   --color-primary-900: #10234f;
   --color-primary-950: #0b1631;
-  --font-sans: "Manrope Variable", "Manrope", "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Avenir Next", sans-serif;
+  --color-accent-500: #08a34a;
+  --color-accent-600: #05863d;
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", "Times New Roman", serif;
 }
 
 :root {
-  --sky-base: #d6e3f3;
-  --sky-bright: #e8f1ff;
-  --ink: #101e3c;
-  --ink-soft: #4c5f7e;
-  --brand: #1870f3;
-  --brand-deep: #1053c4;
+  --surface: #f4f5f6;
+  --surface-soft: #fafbfc;
+  --ink: #0f172a;
+  --ink-soft: #475569;
 }
 
 * {
@@ -36,10 +36,7 @@ body {
   margin: 0;
   color: var(--ink);
   font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at 18% 3%, rgba(255, 255, 255, 0.72), transparent 38%),
-    radial-gradient(circle at 82% 14%, rgba(126, 173, 242, 0.36), transparent 31%),
-    linear-gradient(180deg, var(--sky-bright) 0%, var(--sky-base) 55%, #d2deee 100%);
+  background: var(--surface);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
 }
@@ -52,11 +49,15 @@ h3,
   letter-spacing: -0.02em;
 }
 
+.font-serif {
+  font-family: var(--font-serif);
+}
+
 .hero-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.26) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.26) 1px, transparent 1px);
-  background-size: 36px 36px;
+    linear-gradient(rgba(18, 31, 56, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 31, 56, 0.03) 1px, transparent 1px);
+  background-size: 42px 42px;
 }
 
 .floating {
