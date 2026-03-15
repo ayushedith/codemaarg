@@ -15,6 +15,9 @@
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@fontsource/instrument-serif": "^5.2.8",
+    "@fontsource/playfair-display": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.4.1",
