@@ -77,3 +77,56 @@ h3,
     transform: translateY(-9px);
   }
 }
+
+.avatar-wall {
+  position: relative;
+}
+
+.avatar-wall-grid {
+  position: relative;
+  transition: filter 280ms ease, opacity 280ms ease;
+  filter: blur(1.7px) saturate(0.82);
+  opacity: 0.72;
+}
+
+.avatar-wall::before {
+  content: "";
+  position: absolute;
+  inset: -8px -8px auto -8px;
+  height: 72px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(244, 245, 246, 0.92), rgba(244, 245, 246, 0));
+  z-index: 2;
+  transition: opacity 260ms ease;
+}
+
+.avatar-wall:hover .avatar-wall-grid,
+.avatar-wall:focus-within .avatar-wall-grid {
+  filter: blur(0) saturate(1);
+  opacity: 1;
+}
+
+.avatar-wall:hover::before,
+.avatar-wall:focus-within::before {
+  opacity: 0.18;
+}
+
+.avatar-item {
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease, opacity 220ms ease;
+  transform-origin: center;
+}
+
+.avatar-wall:hover .avatar-item,
+.avatar-wall:focus-within .avatar-item {
+  opacity: 0.56;
+  transform: scale(0.95);
+}
+
+.avatar-wall:hover .avatar-item:hover,
+.avatar-wall:focus-within .avatar-item:focus-visible {
+  opacity: 1;
+  transform: scale(1.26);
+  filter: none;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+  z-index: 3;
+}
