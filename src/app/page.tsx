@@ -150,12 +150,12 @@ function UsernameBox() {
 
 function AvatarWall() {
   return (
-    <div className="mx-auto mt-14 w-full max-w-155">
-      <div className="grid grid-cols-8 gap-3 sm:grid-cols-10">
+    <div className="avatar-wall mx-auto mt-14 w-full max-w-155">
+      <div className="avatar-wall-grid grid grid-cols-8 gap-3 sm:grid-cols-10">
         {members.map((member, idx) => (
           <div
             key={`${member}-${idx}`}
-            className={`grid h-11 w-11 place-items-center rounded-full text-xs font-bold text-[#334155] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] ${avatarBg[idx % avatarBg.length]}`}
+            className={`avatar-item grid h-11 w-11 place-items-center rounded-full text-xs font-bold text-[#334155] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] ${avatarBg[idx % avatarBg.length]}`}
           >
             {member}
           </div>
