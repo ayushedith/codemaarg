@@ -44,27 +44,30 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user }) {
-      if (!user.id) {
+      if (!user.email) {
         return true;
       }
-
-      const existingUser = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: { onboardingCompleted: true },
-      });
 
       const nextName = user.name?.trim() || user.email?.split("@")[0] || "Developer";
       const nextImage = user.image ?? null;
 
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
+      const ensuredUser = await prisma.user.upsert({
+        where: { email: user.email },
+        create: {
+          email: user.email,
           name: nextName,
           ...(nextImage ? { avatarUrl: nextImage, image: nextImage } : {}),
         },
+        update: {
+          name: nextName,
+          ...(nextImage ? { avatarUrl: nextImage, image: nextImage } : {}),
+        },
+        select: {
+          onboardingCompleted: true,
+        },
       });
 
-      if (!existingUser?.onboardingCompleted) {
+      if (!ensuredUser.onboardingCompleted) {
         return "/onboarding";
       }
 
