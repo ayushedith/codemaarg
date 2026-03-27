@@ -3,7 +3,11 @@ import { ArrowRight, Dot, Search } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 
-const navLinks = ["Discover", "Roadmaps", "Matchmaking"];
+const navLinks = [
+  { label: "Discover", href: "/discover" },
+  { label: "Roadmaps", href: "/app/roadmaps" },
+  { label: "Projects", href: "/app/projects" },
+];
 
 const featureBlocks = [
   {
@@ -23,9 +27,31 @@ const featureBlocks = [
   },
 ];
 
-const footerMain = ["Discover Projects", "Trending Ideas", "Build Logs", "Developer Profiles", "Blog", "Docs"];
-const footerTools = ["Roadmap Generator", "Validation Feed", "Semantic Match", "Project Workspace", "Milestone Board", "Launch Checklist"];
-const footerCompany = ["About", "Help Center", "Privacy", "Community Rules", "Terms"];
+const footerMain = [
+  { label: "Discover Projects", href: "/discover/projects" },
+  { label: "Trending Ideas", href: "/discover/trending" },
+  { label: "Build Logs", href: "/app/projects" },
+  { label: "Developer Profiles", href: "/profile" },
+  { label: "Blog", href: "/discover" },
+  { label: "Docs", href: "/app" },
+];
+
+const footerTools = [
+  { label: "Roadmap Generator", href: "/app/roadmaps/new" },
+  { label: "Validation Feed", href: "/discover/trending" },
+  { label: "Semantic Match", href: "/discover/trending" },
+  { label: "Project Workspace", href: "/app/projects" },
+  { label: "Milestone Board", href: "/app/roadmaps" },
+  { label: "Launch Checklist", href: "/app" },
+];
+
+const footerCompany = [
+  { label: "About", href: "/about" },
+  { label: "Help Center", href: "/help-center" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Community Rules", href: "/community-guidelines" },
+  { label: "Terms", href: "/terms" },
+];
 
 const members = [
   "AK",
@@ -212,11 +238,11 @@ export default async function Home() {
           <nav className="mx-auto hidden items-center gap-7 md:flex">
             {navLinks.map((item) => (
               <Link
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="text-sm font-semibold text-[#111827] transition hover:text-accent-600"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -333,9 +359,9 @@ export default async function Home() {
               <p className="text-sm font-bold uppercase tracking-wider text-[#111827]">Main Pages</p>
               <ul className="mt-4 space-y-2.5">
                 {footerMain.map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
-                      {item}
+                  <li key={item.label}>
+                    <Link href={item.href} className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -346,9 +372,9 @@ export default async function Home() {
               <p className="text-sm font-bold uppercase tracking-wider text-[#111827]">Tools</p>
               <ul className="mt-4 space-y-2.5">
                 {footerTools.map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
-                      {item}
+                  <li key={item.label}>
+                    <Link href={item.href} className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -359,9 +385,9 @@ export default async function Home() {
               <p className="text-sm font-bold uppercase tracking-wider text-[#111827]">Company</p>
               <ul className="mt-4 space-y-2.5">
                 {footerCompany.map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
-                      {item}
+                  <li key={item.label}>
+                    <Link href={item.href} className="text-[15px] font-semibold text-[#475569] hover:text-[#111827]">
+                      {item.label}
                     </Link>
                   </li>
                 ))}
