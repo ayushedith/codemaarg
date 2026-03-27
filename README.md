@@ -80,6 +80,9 @@ Ensure the following are set in your `.env`:
 * `MONGODB_URI` (MongoDB Atlas connection string)
 * `MONGODB_DB_NAME` (e.g., "codemaarg")
 * `OPENAI_API_KEY` (Your OpenAI Key)
+* `AUTH_SECRET` (Generate with `openssl rand -base64 32`)
+* `GITHUB_ID` and `GITHUB_SECRET` (GitHub OAuth app credentials)
+* `EMAIL_SERVER_HOST`, `EMAIL_SERVER_PORT`, `EMAIL_SERVER_USER`, `EMAIL_SERVER_PASSWORD`, `EMAIL_FROM` (SMTP config for magic-link email sign-in)
 
 ### 5. Database Setup
 
@@ -113,10 +116,13 @@ Your app should now be running on [http://localhost:3000](http://localhost:3000)
 │   └── schema.prisma         # PostgreSQL Models, Enums, and Relations
 ├── 📁 src/
 │   ├── 📁 app/               # Next.js App Router (Pages, API Routes)
+│   │   ├── 📁 auth/signin/    # Custom Auth.js sign-in screen
+│   │   ├── 📁 api/auth/       # Auth.js handlers (email + OAuth)
 │   │   ├── 📁 api/roadmap/   # AI Pipeline via OpenAI
 │   │   ├── globals.css       # Tailwind v4 configuration
 │   │   ├── layout.tsx
 │   │   └── page.tsx          # Marketing Landing Page
+│   ├── auth.ts               # Auth.js config + providers + callbacks
 │   └── 📁 lib/
 │       ├── db.ts             # Prisma Client instance/singleton
 │       ├── 📁 mutations/     # Complex backend operations (votes, comments)

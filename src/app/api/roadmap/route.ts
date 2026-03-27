@@ -56,10 +56,16 @@ const RoadmapRequestSchema = z.object({
 
 // ── OpenAI client (works with any compatible provider) ───────────────────────
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_BASE_URL, // optional override for Groq / Together / etc.
-});
+function createOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY is missing");
+  }
+
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: process.env.OPENAI_BASE_URL, // optional override for Groq / Together / etc.
+  });
+}
 
 // ── System prompt ────────────────────────────────────────────────────────────
 
@@ -249,6 +255,7 @@ const FEW_SHOT_EXAMPLES: OpenAI.ChatCompletionMessageParam[] = [
 
 export async function POST(request: NextRequest) {
   try {
+    const openai = createOpenAIClient();
     const body = await request.json();
 
     // Validate input at the system boundary
