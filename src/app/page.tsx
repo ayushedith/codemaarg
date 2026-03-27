@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Dot, Search } from "lucide-react";
 import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
 
 const navLinks = ["Discover", "Roadmaps", "Matchmaking"];
 
@@ -188,6 +189,15 @@ function QrWidget() {
 
 export default async function Home() {
   const session = await auth();
+  const onboardingCompleted = session?.user?.id
+    ? (
+        await prisma.user.findUnique({
+          where: { id: session.user.id },
+          select: { onboardingCompleted: true },
+        })
+      )?.onboardingCompleted ?? false
+    : false;
+
   const displayName =
     session?.user?.name?.trim() || session?.user?.email || "Developer";
 
@@ -218,6 +228,12 @@ export default async function Home() {
                   {displayName}
                 </span>
                 <Link
+                  href={onboardingCompleted ? "/profile" : "/onboarding"}
+                  className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
+                >
+                  {onboardingCompleted ? "Profile" : "Complete Profile"}
+                </Link>
+                <Link
                   href="/api/auth/signout?callbackUrl=/"
                   className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
                 >
@@ -233,10 +249,14 @@ export default async function Home() {
               </Link>
             )}
             <Link
-              href={session?.user ? "/" : "/auth/signin"}
+              href={session?.user ? (onboardingCompleted ? "/profile" : "/onboarding") : "/auth/signin"}
               className="rounded-xl bg-accent-500 px-3.5 py-2 text-sm font-bold text-white transition hover:bg-accent-600"
             >
-              {session?.user ? "Continue Building" : "Start Building"}
+              {session?.user
+                ? onboardingCompleted
+                  ? "Continue Building"
+                  : "Start Onboarding"
+                : "Start Building"}
             </Link>
           </div>
         </div>

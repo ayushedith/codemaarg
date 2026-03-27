@@ -15,6 +15,7 @@ export const profileFormSchema = z.object({
     .min(1, "GitHub handle is required")
     .max(39)
     .regex(/^[A-Za-z0-9-]+$/, "GitHub handle can only include letters, numbers, and hyphens"),
+  skillLevel: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]),
 });
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;

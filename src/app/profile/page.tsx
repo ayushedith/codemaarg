@@ -10,10 +10,12 @@ import {
 } from "@/lib/profile";
 
 type SearchParams = {
+  updated?: string;
+  welcome?: string;
   error?: string;
 };
 
-type OnboardingPageProps = {
+type ProfilePageProps = {
   searchParams?: Promise<SearchParams>;
 };
 
@@ -22,13 +24,13 @@ const skillLevelOptions = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"] as 
 const errorMap: Record<string, string> = {
   invalid: "Please review the form fields and try again.",
   github_taken: "That GitHub handle is already linked to another account.",
-  failed: "Could not save your onboarding details. Please try again.",
+  failed: "Could not update your profile right now.",
 };
 
-export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
+export default async function ProfilePage({ searchParams }: ProfilePageProps) {
   const session = await auth();
   if (!session?.user?.id) {
-    redirect("/auth/signin?callbackUrl=/onboarding");
+    redirect("/auth/signin?callbackUrl=/profile");
   }
 
   const userId = session.user.id;
@@ -36,6 +38,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
     select: {
+      email: true,
       name: true,
       bio: true,
       skills: true,
@@ -46,14 +49,20 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     },
   });
 
-  if (user.onboardingCompleted) {
-    redirect("/profile");
+  if (!user.onboardingCompleted) {
+    redirect("/onboarding");
   }
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
+  const success =
+    resolvedSearchParams.welcome === "1"
+      ? "Profile completed. You are all set."
+      : resolvedSearchParams.updated === "1"
+        ? "Profile updated successfully."
+        : null;
   const error = resolvedSearchParams.error ? errorMap[resolvedSearchParams.error] : null;
 
-  async function submitOnboarding(formData: FormData) {
+  async function updateProfile(formData: FormData) {
     "use server";
 
     const parsed = profileFormSchema.safeParse({
@@ -66,13 +75,13 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     });
 
     if (!parsed.success) {
-      redirect("/onboarding?error=invalid");
+      redirect("/profile?error=invalid");
     }
 
     const skills = normalizeSkills(parsed.data.skills);
 
     if (skills.length === 0) {
-      redirect("/onboarding?error=invalid");
+      redirect("/profile?error=invalid");
     }
 
     try {
@@ -93,13 +102,13 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        redirect("/onboarding?error=github_taken");
+        redirect("/profile?error=github_taken");
       }
 
-      redirect("/onboarding?error=failed");
+      redirect("/profile?error=failed");
     }
 
-    redirect("/profile?welcome=1");
+    redirect("/profile?updated=1");
   }
 
   return (
@@ -108,22 +117,41 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-accent-600">
-              Onboarding
+              Profile
             </p>
             <h1 className="mt-2 font-serif text-4xl font-bold text-[#0f172a]">
-              Complete your developer profile
+              Your developer profile
             </h1>
             <p className="mt-2 text-sm font-medium text-[#64748b]">
-              This info powers roadmap personalization and teammate matchmaking.
+              Keep your information up to date for better recommendations.
             </p>
           </div>
-          <Link
-            href="/api/auth/signout?callbackUrl=/"
-            className="rounded-xl border border-[#e5e7eb] px-4 py-2 text-sm font-semibold text-[#334155]"
-          >
-            Sign out
-          </Link>
+
+          <div className="flex gap-2">
+            <Link
+              href="/"
+              className="rounded-xl border border-[#e5e7eb] px-4 py-2 text-sm font-semibold text-[#334155]"
+            >
+              Home
+            </Link>
+            <Link
+              href="/api/auth/signout?callbackUrl=/"
+              className="rounded-xl border border-[#e5e7eb] px-4 py-2 text-sm font-semibold text-[#334155]"
+            >
+              Sign out
+            </Link>
+          </div>
         </div>
+
+        <div className="mb-6 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3 text-sm font-medium text-[#334155]">
+          Signed in as {user.email}
+        </div>
+
+        {success ? (
+          <div className="mb-6 rounded-xl border border-[#d1fadf] bg-[#ecfdf3] px-4 py-3 text-sm font-semibold text-[#027a48]">
+            {success}
+          </div>
+        ) : null}
 
         {error ? (
           <div className="mb-6 rounded-xl border border-[#f8d7da] bg-[#fff5f5] px-4 py-3 text-sm font-semibold text-[#b42318]">
@@ -131,7 +159,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
           </div>
         ) : null}
 
-        <form action={submitOnboarding} className="grid gap-5">
+        <form action={updateProfile} className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-[#334155]">
             Name
             <input
@@ -150,7 +178,6 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
               defaultValue={user.bio ?? ""}
               required
               className="rounded-xl border border-[#d0d7e2] px-4 py-3 text-sm font-medium text-[#0f172a] outline-none focus:border-accent-500"
-              placeholder="Tell others what you build and what you're learning."
             />
           </label>
 
@@ -160,7 +187,6 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
               name="skills"
               required
               defaultValue={user.skills.join(", ")}
-              placeholder="TypeScript, Next.js, PostgreSQL"
               className="rounded-xl border border-[#d0d7e2] px-4 py-3 text-sm font-medium text-[#0f172a] outline-none focus:border-accent-500"
             />
           </label>
@@ -171,8 +197,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
               <input
                 name="timezone"
                 required
-                defaultValue={user.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone}
-                placeholder="Asia/Kolkata"
+                defaultValue={user.timezone ?? ""}
                 className="rounded-xl border border-[#d0d7e2] px-4 py-3 text-sm font-medium text-[#0f172a] outline-none focus:border-accent-500"
               />
             </label>
@@ -199,7 +224,6 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
               name="githubHandle"
               required
               defaultValue={user.githubHandle ?? ""}
-              placeholder="your-github-handle"
               className="rounded-xl border border-[#d0d7e2] px-4 py-3 text-sm font-medium text-[#0f172a] outline-none focus:border-accent-500"
             />
           </label>
@@ -208,7 +232,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
             type="submit"
             className="mt-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-accent-600"
           >
-            Save and continue
+            Save profile
           </button>
         </form>
       </div>
