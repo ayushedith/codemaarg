@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 
 const navLinks = [
   { label: "Discover", href: "/discover" },
+  { label: "About", href: "/about" },
   { label: "Roadmaps", href: "/app/roadmaps" },
   { label: "Projects", href: "/app/projects" },
 ];
