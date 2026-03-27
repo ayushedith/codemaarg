@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 type SignInFormProps = {
   callbackUrl: string;
@@ -114,7 +114,13 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
               disabled={isEmailPending}
               className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#16a34a] px-4 text-sm font-bold text-white transition hover:bg-[#15803d] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              <Mail className="h-4 w-4" />
+              <Image
+                src="/assets/icons/mail.svg"
+                alt="Mail"
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+              />
               {isEmailPending ? "Sending link..." : "Send sign-in link"}
             </button>
             <p className="text-xs font-medium text-[#64748b]">
