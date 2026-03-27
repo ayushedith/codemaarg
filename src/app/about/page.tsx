@@ -18,6 +18,27 @@ const principles = [
   },
 ];
 
+const storyBlocks = [
+  {
+    title: "Why we built this",
+    description:
+      "Most developer products fail before code quality becomes the issue. They fail in planning, scope, and alignment. CodeMaarg exists to solve that earlier stage.",
+    tone: "bg-[#ecfdf3] border-[#b7ebca]",
+  },
+  {
+    title: "What we optimize for",
+    description:
+      "We optimize for shipping velocity with fewer wrong turns by combining roadmap clarity, community feedback loops, and execution focused collaboration.",
+    tone: "bg-[#eff6ff] border-[#c8ddff]",
+  },
+];
+
+const momentumStats = [
+  { label: "Roadmaps generated", value: "2.4k+", tone: "text-[#16a34a]" },
+  { label: "Ideas validated", value: "890+", tone: "text-[#1d4ed8]" },
+  { label: "Collaboration matches", value: "1.1k+", tone: "text-[#b45309]" },
+];
+
 const phases = [
   {
     step: "01",
@@ -78,6 +99,29 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {momentumStats.map((item) => (
+              <article key={item.label} className="rounded-xl border border-[#dbe3ee] bg-white px-4 py-3">
+                <p className={`text-2xl font-bold ${item.tone}`}>{item.value}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#64748b]">
+                  {item.label}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-2">
+          {storyBlocks.map((block) => (
+            <article
+              key={block.title}
+              className={`rounded-2xl border p-6 shadow-[0_10px_20px_rgba(15,23,42,0.06)] ${block.tone}`}
+            >
+              <h2 className="text-2xl font-bold tracking-tight text-[#0f172a]">{block.title}</h2>
+              <p className="mt-3 text-sm font-medium leading-7 text-[#334155]">{block.description}</p>
+            </article>
+          ))}
         </section>
 
         <section className="grid gap-4 md:grid-cols-3">
@@ -121,6 +165,26 @@ export default function AboutPage() {
                 <p className="mt-2 text-sm font-medium leading-7 text-[#64748b]">{phase.detail}</p>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-[#facc15]/45 bg-gradient-to-r from-[#fffbeb] via-[#fefce8] to-[#fff7ed] p-7 shadow-[0_12px_28px_rgba(15,23,42,0.06)] sm:p-8">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b45309]">Who we serve</p>
+          <h2 className="mt-2 font-serif text-4xl font-bold text-[#0f172a]">Built for builders who execute</h2>
+          <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-[#475569]">
+            Solo developers, startup teams, and open source contributors use CodeMaarg to reduce
+            planning uncertainty and convert momentum into shipped outcomes.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <span className="rounded-full border border-[#f7d68a] bg-white px-3 py-1 text-xs font-semibold text-[#92400e]">
+              Solo builders
+            </span>
+            <span className="rounded-full border border-[#f7d68a] bg-white px-3 py-1 text-xs font-semibold text-[#92400e]">
+              Startup teams
+            </span>
+            <span className="rounded-full border border-[#f7d68a] bg-white px-3 py-1 text-xs font-semibold text-[#92400e]">
+              Open source collaborators
+            </span>
           </div>
         </section>
 
