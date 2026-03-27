@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Dot, Search } from "lucide-react";
+import { auth } from "@/auth";
 
 const navLinks = ["Discover", "Roadmaps", "Matchmaking"];
 
@@ -185,7 +186,11 @@ function QrWidget() {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  const displayName =
+    session?.user?.name?.trim() || session?.user?.email || "Developer";
+
   return (
     <div className="relative min-h-screen bg-[#f4f5f6] text-[#0f172a]">
       <div className="hero-grid pointer-events-none absolute inset-0 opacity-55" />
@@ -207,17 +212,31 @@ export default function Home() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
+            {session?.user ? (
+              <>
+                <span className="hidden rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] lg:block">
+                  {displayName}
+                </span>
+                <Link
+                  href="/api/auth/signout?callbackUrl=/"
+                  className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
+                >
+                  Sign out
+                </Link>
+              </>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
+              >
+                Sign in
+              </Link>
+            )}
             <Link
-              href="#"
-              className="rounded-xl border border-[#e5e7eb] bg-[#f8fafc] px-3 py-2 text-sm font-semibold text-[#111827] transition hover:bg-[#f1f5f9]"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="#"
+              href={session?.user ? "/" : "/auth/signin"}
               className="rounded-xl bg-accent-500 px-3.5 py-2 text-sm font-bold text-white transition hover:bg-accent-600"
             >
-              Start Building
+              {session?.user ? "Continue Building" : "Start Building"}
             </Link>
           </div>
         </div>

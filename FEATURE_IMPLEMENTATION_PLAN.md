@@ -12,7 +12,7 @@ CodeMaarg helps developers move from idea to shipped product through:
 
 ## Phase 1 MVP Foundation
 
-- [ ] User authentication with email and OAuth sign in
+- [x] User authentication with email and OAuth sign in
 - [ ] User onboarding flow with name, bio, skills, timezone, and GitHub handle
 - [ ] Profile page with editable developer information
 - [ ] AI roadmap generation endpoint with strict JSON output
