@@ -48,6 +48,11 @@ export const authOptions: NextAuthOptions = {
         return true;
       }
 
+      const existingUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { onboardingCompleted: true },
+      });
+
       const nextName = user.name?.trim() || user.email?.split("@")[0] || "Developer";
       const nextImage = user.image ?? null;
 
@@ -58,6 +63,10 @@ export const authOptions: NextAuthOptions = {
           ...(nextImage ? { avatarUrl: nextImage, image: nextImage } : {}),
         },
       });
+
+      if (!existingUser?.onboardingCompleted) {
+        return "/onboarding";
+      }
 
       return true;
     },

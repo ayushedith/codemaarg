@@ -56,6 +56,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -96,6 +97,7 @@ model User {
   githubHandle  String?  @unique
   timezone      String?  // IANA tz id, e.g. "Asia/Kolkata"  — used for matchmaking weights
   skillLevel    SkillLevel @default(BEGINNER)
+  onboardingCompleted Boolean @default(false)
 
   // Relations
   projects      Project[]
