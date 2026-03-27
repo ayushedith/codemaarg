@@ -24,3 +24,4 @@ build/
 *.pem
 *.log
 .env.example
+.env.example
