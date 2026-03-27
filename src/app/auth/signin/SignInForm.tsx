@@ -3,6 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ArrowLeft, Mail } from "lucide-react";
 
@@ -26,7 +27,8 @@ const errorTextMap: Record<string, string> = {
 export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [isEmailPending, setIsEmailPending] = useState(false);
-  const [isOAuthPending, setIsOAuthPending] = useState(false);
+  const [isGitHubPending, setIsGitHubPending] = useState(false);
+  const [isGooglePending, setIsGooglePending] = useState(false);
 
   const errorMessage = useMemo(
     () => (error ? errorTextMap[error] ?? "Sign in failed. Please try again." : null),
@@ -49,9 +51,15 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
   };
 
   const onGitHubSignIn = async () => {
-    setIsOAuthPending(true);
+    setIsGitHubPending(true);
     await signIn("github", { callbackUrl });
-    setIsOAuthPending(false);
+    setIsGitHubPending(false);
+  };
+
+  const onGoogleSignIn = async () => {
+    setIsGooglePending(true);
+    await signIn("google", { callbackUrl });
+    setIsGooglePending(false);
   };
 
   return (
@@ -77,7 +85,7 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
           Welcome back
         </h1>
         <p className="mt-3 text-base font-medium text-[#475569]">
-          Sign in to continue building on CodeMaarg with email magic link or GitHub OAuth.
+          Sign in to continue building on CodeMaarg with email magic link or social OAuth.
         </p>
 
         {errorMessage ? (
@@ -123,7 +131,7 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
           <button
             type="button"
             onClick={onGitHubSignIn}
-            disabled={isOAuthPending}
+            disabled={isGitHubPending || isGooglePending}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#cfd8e6] bg-[#f8fafc] px-4 text-sm font-bold text-[#0f172a] transition hover:bg-[#eef2f7] disabled:cursor-not-allowed disabled:opacity-70"
           >
             <span className="h-6 w-6 overflow-hidden rounded-sm">
@@ -134,10 +142,26 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
                 style={{ width: "100%", height: "100%" }}
               />
             </span>
-            {isOAuthPending ? "Connecting..." : "Continue with GitHub"}
+            {isGitHubPending ? "Connecting..." : "Continue with GitHub"}
+          </button>
+
+          <button
+            type="button"
+            onClick={onGoogleSignIn}
+            disabled={isGitHubPending || isGooglePending}
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#cfd8e6] bg-[#f8fafc] px-4 text-sm font-bold text-[#0f172a] transition hover:bg-[#eef2f7] disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <Image
+              src="/assets/icons/google.svg"
+              alt="Google"
+              width={20}
+              height={20}
+              className="h-5 w-5"
+            />
+            {isGooglePending ? "Connecting..." : "Continue with Google"}
           </button>
           <p className="text-xs font-medium text-[#64748b]">
-            Add GITHUB_ID and GITHUB_SECRET env vars to enable GitHub OAuth.
+            Add GITHUB_ID, GITHUB_SECRET, GOOGLE_ID, and GOOGLE_SECRET env vars to enable social OAuth.
           </p>
         </div>
       </section>
