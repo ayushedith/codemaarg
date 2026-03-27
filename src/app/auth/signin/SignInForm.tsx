@@ -3,7 +3,8 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { ArrowLeft, Mail, Github } from "lucide-react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { ArrowLeft, Mail } from "lucide-react";
 
 type SignInFormProps = {
   callbackUrl: string;
@@ -125,7 +126,14 @@ export default function SignInForm({ callbackUrl, error }: SignInFormProps) {
             disabled={isOAuthPending}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#cfd8e6] bg-[#f8fafc] px-4 text-sm font-bold text-[#0f172a] transition hover:bg-[#eef2f7] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <Github className="h-4 w-4" />
+            <span className="h-6 w-6 overflow-hidden rounded-sm">
+              <DotLottieReact
+                src="/assets/icons/github.lottie"
+                autoplay
+                loop
+                style={{ width: "100%", height: "100%" }}
+              />
+            </span>
             {isOAuthPending ? "Connecting..." : "Continue with GitHub"}
           </button>
           <p className="text-xs font-medium text-[#64748b]">
